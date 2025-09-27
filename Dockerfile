@@ -1,7 +1,9 @@
-ARG ALPINE_TAG=3.19
-FROM --platform=linux/amd64 spritsail/alpine:${ALPINE_TAG}
+ARG ALPINE_TAG=3.22.1
+ARG TARGETPLATFORM=linux/amd64
+FROM --platform=${TARGETPLATFORM} alpine:${ALPINE_TAG}
 
-RUN apk --no-cache add bash cmake clang clang-dev make git gcc g++ libc-dev linux-headers
+RUN apk --no-cache add bash cmake clang clang-dev make git gcc g++ libc-dev linux-headers && \
+    rm -rf /var/cache/apk/*
 
 ADD entrypoint /usr/local/bin
 RUN chmod +x /usr/local/bin/entrypoint
