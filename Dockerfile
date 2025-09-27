@@ -1,5 +1,5 @@
 ARG ALPINE_TAG=3.22.1
-FROM --platform=linux/amd64 alpine AS build_amd64
+FROM --platform=linux/amd64 alpine:${ALPINE_TAG}
 
 RUN apk --no-cache add bash cmake clang clang-dev make git gcc g++ libc-dev linux-headers && \
     rm -rf /var/cache/apk/*
