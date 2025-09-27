@@ -10,7 +10,9 @@ C++開発用のビルドコンテナです。GitHub ActionsのCIテスト環境�
   - カスタムエントリーポイントスクリプトを設定
 
 - **build.sh**: Dockerイメージのビルドスクリプト
-  - イメージ名: `byplayer/cxx-build`
+  - デフォルトイメージ名: `byplayer/cxx-build`
+  - linux/amd64アーキテクチャ用にビルド
+  - タグ指定とプッシュ機能をサポート
 
 - **entrypoint**: コンテナ起動時に実行されるエントリーポイントスクリプト
 
@@ -19,38 +21,42 @@ C++開発用のビルドコンテナです。GitHub ActionsのCIテスト環境�
 ### 1. Dockerイメージのビルド
 
 ```bash
-# ビルドスクリプトを使用
+# デフォルト設定でビルド (byplayer/cxx-build:latest)
 ./build.sh
 
-# または直接dockerコマンドで実行
-docker build ./ -t byplayer/cxx-build
+# 特定のタグでビルド
+./build.sh v1.0.0
+
+# ビルドして即座にプッシュ
+./build.sh v1.0.0 push
 ```
 
-### 2. タグの設定
+### 2. build.shスクリプトの使用方法
 
 ```bash
-# バージョンタグを設定
-docker tag byplayer/cxx-build byplayer/cxx-build:v1.0.0
+# 使用法: ./build.sh [TAG] [push]
+#
+# パラメータ:
+#   TAG   - イメージタグ (デフォルト: latest)
+#   push  - "push"を指定すると、ビルド後にレジストリにプッシュ
 
-# latestタグを設定
-docker tag byplayer/cxx-build byplayer/cxx-build:latest
-
-# 特定の日付タグを設定
-docker tag byplayer/cxx-build byplayer/cxx-build:$(date +%Y%m%d)
+# 例:
+./build.sh                  # byplayer/cxx-build:latest をビルド
+./build.sh v2.0.0          # byplayer/cxx-build:v2.0.0 をビルド
+./build.sh v2.0.0 push     # ビルドしてプッシュ
 ```
 
 ### 3. Docker Hubへのプッシュ
 
 ```bash
-# Docker Hubにログイン
+# Docker Hubにログイン (初回のみ)
 docker login
 
-# イメージをプッシュ（全タグ）
-docker push byplayer/cxx-build:latest
-docker push byplayer/cxx-build:v1.0.0
+# build.shを使用してビルドとプッシュを同時に実行
+./build.sh v1.0.0 push
 
-# または全タグを一括でプッシュ
-docker push byplayer/cxx-build --all-tags
+# または個別にプッシュ
+docker push byplayer/cxx-build:v1.0.0
 ```
 
 ## 含まれるツール
